@@ -23,6 +23,11 @@ public class ImageSwiper : MonoBehaviour
 
     private void Start()
     {
+        if (displayImage == null)
+        {
+            Debug.LogError("Display Image не назначен в инспекторе!");
+            return;
+        }
         if (images.Length > 0)
             displayImage.sprite = images[_currentIndex]; // Отображение первой картинки
     }

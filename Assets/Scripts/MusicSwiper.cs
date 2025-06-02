@@ -10,7 +10,8 @@ public class MusicSwiper : MonoBehaviour
     public GameObject buttonPrefab; // Префаб кнопки
     public Transform contentPanel;  // Контейнер внутри Scroll View
     public AudioSource audioSource; // Компонент, который проигрывает звук
-
+    public GameObject buttonPlay;
+    public GameObject buttonStop;
     void Start()
     {
         GenerateButtons();
@@ -18,27 +19,23 @@ public class MusicSwiper : MonoBehaviour
 
     void GenerateButtons()
     {
+        buttonPlay.GetComponent<Button>().onClick.AddListener(PlayAudio);
+        buttonStop.GetComponent<Button>().onClick.AddListener(StopPlaying);
         foreach (AudioClip clip in audioClips)
         {
             GameObject newButton = Instantiate(buttonPrefab, contentPanel);
             newButton.GetComponentInChildren<Text>().text = clip.name;
 
+            AudioClip currentClip = clip;
             newButton.GetComponent<Button>().onClick.AddListener(() =>
             {
-                PlayClip(clip);
+                StopPlaying();
+                audioSource.clip = currentClip;
+                PlayAudio();
             });
         }
     }
-
-    void PlayClip(AudioClip clip)
-    {
-        if (audioSource.clip != null)
-        {
-            audioSource.Stop();
-            audioSource.clip = clip;
-            audioSource.Play();
-        }
-    }
+    
 
     public void StopPlaying()
     {
@@ -46,6 +43,8 @@ public class MusicSwiper : MonoBehaviour
         {
             audioSource.Stop();
         }
+        buttonPlay.SetActive(true);
+        buttonStop.SetActive(false);
     }
 
     public void PlayAudio()
@@ -54,5 +53,7 @@ public class MusicSwiper : MonoBehaviour
         {
             audioSource.Play();
         }
+        buttonStop.SetActive(true);
+        buttonPlay.SetActive(false);
     }
 }
